@@ -1,1 +1,0 @@
-# zvu-en-Blatnice-pod-Sv.-Ant.
