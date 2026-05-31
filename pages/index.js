@@ -1,6 +1,6 @@
 import Calendar from "../components/Calendar";
 import ReservationForm from "../components/ReservationForm";
-import Budecenik from "../components/Budecenik";
+import cenik from "../components/cenik";
 
 export default function Home() {
   const rez = [];
@@ -10,7 +10,7 @@ export default function Home() {
       <p>Kalendář akcí a rezervací</p>
       <Calendar rezervace={rez} />
       <ReservationForm />
-      <Cenik />
+      <cenik />
     </div>
   );
 }
