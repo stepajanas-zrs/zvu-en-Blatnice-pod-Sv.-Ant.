@@ -1,5 +1,5 @@
 import fs from "fs";
-const path = "data/budecenik.json";
+const path = "data/cenik.json";
 
 export default function handler(req, res) {
   if (req.method === "GET") {
