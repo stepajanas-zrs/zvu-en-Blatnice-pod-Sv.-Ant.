@@ -10,7 +10,7 @@ export default function Home() {
       <p>Kalendář akcí a rezervací</p>
       <Calendar rezervace={rez} />
       <ReservationForm />
-      <Budecenik />
+      <Cenik />
     </div>
   );
 }
