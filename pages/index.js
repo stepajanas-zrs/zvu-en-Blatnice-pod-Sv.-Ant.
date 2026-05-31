@@ -3,6 +3,7 @@ import ReservationForm from "../components/ReservationForm";
 import Budecenik from "../components/Budecenik";
 
 export default function Home() {
+  const rez = [];
   return (
     <div>
       <h1>Zvučení Blatnice pod sv. Ant.</h1>
