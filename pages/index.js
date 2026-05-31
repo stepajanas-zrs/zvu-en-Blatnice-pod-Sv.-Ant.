@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <h1>Zvučení Blatnice pod sv. Ant.</h1>
       <p>Kalendář akcí a rezervací</p>
-      <Calendar />
+      <Calendar rezervace={rez} />
       <ReservationForm />
       <Budecenik />
     </div>
