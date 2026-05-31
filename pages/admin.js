@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
 export default function Admin() {
-  const [budecenik, setBudecenik] = useState("");
+  const [cenik, setcenik] = useState("");
   const [rezervace, setRezervace] = useState([]);
 
   // Načti budeceník
   useEffect(() => {
-    fetch("/api/budecenik")
+    fetch("/api/cenik")
       .then(r => r.json())
-      .then(d => setBudecenik(d.text));
+      .then(d => setcenik(d.text));
   }, []);
 
   // Načti rezervace
@@ -22,11 +22,11 @@ export default function Admin() {
     <div style={{ maxWidth: 600, margin: "0 auto" }}>
       <h1>Administrace</h1>
       <section>
-        <h2>Budeceník</h2>
+        <h2>ceník</h2>
         <textarea
           rows={8}
           style={{ width: "100%" }}
-          value={budecenik}
+          value={cenik}
           onChange={e => setBudecenik(e.target.value)}
         />
         <br />
