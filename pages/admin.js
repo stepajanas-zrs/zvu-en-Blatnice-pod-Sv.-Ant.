@@ -4,7 +4,7 @@ export default function Admin() {
   const [cenik, setcenik] = useState("");
   const [rezervace, setRezervace] = useState([]);
 
-  // Načti budeceník
+  // Načti ceník
   useEffect(() => {
     fetch("/api/cenik")
       .then(r => r.json())
@@ -20,7 +20,7 @@ export default function Admin() {
 
   return (
     <div style={{ maxWidth: 600, margin: "0 auto" }}>
-      <h1>Administrace</h1>
+      <h1>Admin</h1>
       <section>
         <h2>ceník</h2>
         <textarea
