@@ -27,7 +27,7 @@ export default function Admin() {
           rows={8}
           style={{ width: "100%" }}
           value={cenik}
-          onChange={e => setBudecenik(e.target.value)}
+          onChange={e => setcenik(e.target.value)}
         />
         <br />
         {/* Přidej tlačítko pro uložení podle předchozích vzorů */}
