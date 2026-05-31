@@ -9,7 +9,7 @@ export default function Home() {
       <p>Kalendář akcí a rezervací</p>
       <Calendar />
       <ReservationForm />
-      <Budecenik />
+      <cenik />
     </div>
   );
 }
