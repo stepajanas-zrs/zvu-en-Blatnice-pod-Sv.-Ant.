@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+
+
+
+      import { useState, useEffect } from "react";
 
 export default function Admin() {
   const [cenik, setcenik] = useState("");
@@ -9,6 +12,19 @@ export default function Admin() {
     fetch("/api/cenik")
       .then(r => r.json())
       .then(d => setcenik(d.text));
+  }, []);
+
+  const ulozcenik = async () => {
+    setSavingB(true);
+    await fetch("/api/cenik", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ text: cenik })
+  // Načti rezervace
+  useEffect(() => {
+    fetch("/api/rezervace")
+      .then(r => r.json())
+      .then(d => setRezervace(d));
   }, []);
 
   return (
@@ -23,6 +39,9 @@ export default function Admin() {
           onChange={e => setcenik(e.target.value)}
         />
         <br />
+        <button onClick={ulozBudecenik} disabled={savingB}>
+          {savingB ? "Ukládám..." : "Uložit ceník"}
+        </button>
         {/* Přidej tlačítko pro uložení podle předchozích vzorů */}
         </section>
       <section>
