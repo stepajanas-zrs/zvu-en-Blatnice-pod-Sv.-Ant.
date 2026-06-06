@@ -2,25 +2,34 @@ import { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
 
 export default function Admin() {
-  // --- SPRÁVA BUDECENÍKU ---
-  const [budecenik, setBudecenik] = useState("");
-  const [savingB, setSavingB] = useState(false);
+  // --- SPRÁVA CENÍKU ---
+  const [cenik, setCenik] = useState("");
+  const [savingC, setSavingC] = useState(false);
 
   useEffect(() => {
-    fetch("/api/budecenik")
+    fetch("/api/cenik")
       .then(r => r.json())
-      .then(d => setBudecenik(d.text || ""));
+      .then(d => setCenik(d.text || ""))
+      .catch(e => console.error("Chyba při načítání ceníku:", e));
   }, []);
 
-  const ulozBudecenik = async () => {
-    setSavingB(true);
-    await fetch("/api/budecenik", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ text: budecenik })
-    });
-    setSavingB(false);
-    alert("Budeceník uložen!");
+  const ulozCenik = async () => {
+    setSavingC(true);
+    try {
+      const res = await fetch("/api/cenik", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ text: cenik })
+      });
+      if (res.ok) {
+        alert("Ceník uložen!");
+      } else {
+        alert("Chyba při ukládání ceníku");
+      }
+    } catch (e) {
+      alert("Chyba: " + e.message);
+    }
+    setSavingC(false);
   };
 
   // --- SPRÁVA REZERVACÍ ---
@@ -29,9 +38,13 @@ export default function Admin() {
 
   const loadReservations = async () => {
     setLoading(true);
-    const res = await fetch("/api/rezervace");
-    const data = await res.json();
-    setRezervace(data);
+    try {
+      const res = await fetch("/api/rezervace");
+      const data = await res.json();
+      setRezervace(data);
+    } catch (e) {
+      console.error("Chyba při načítání rezervací:", e);
+    }
     setLoading(false);
   };
 
@@ -41,12 +54,21 @@ export default function Admin() {
 
   const deleteReservation = async (index) => {
     if (confirm("Opravdu chceš zrušit tuto rezervaci?")) {
-      await fetch("/api/rezervace", {
-        method: "DELETE",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ index })
-      });
-      loadReservations();
+      try {
+        const res = await fetch("/api/rezervace", {
+          method: "DELETE",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ index })
+        });
+        if (res.ok) {
+          alert("Rezervace zrušena!");
+          loadReservations();
+        } else {
+          alert("Chyba při rušení rezervace");
+        }
+      } catch (e) {
+        alert("Chyba: " + e.message);
+      }
     }
   };
 
@@ -55,16 +77,16 @@ export default function Admin() {
       <h1>Administrace</h1>
       
       <section style={{ marginBottom: 40 }}>
-        <h2>Budeceník</h2>
+        <h2>Ceník</h2>
         <textarea
           rows={8}
           style={{width: "100%"}}
-          value={budecenik}
-          onChange={e => setBudecenik(e.target.value)}
+          value={cenik}
+          onChange={e => setCenik(e.target.value)}
         />
         <br />
-        <button onClick={ulozBudecenik} disabled={savingB}>
-          {savingB ? "Ukládám..." : "Uložit budeceník"}
+        <button onClick={ulozCenik} disabled={savingC}>
+          {savingC ? "Ukládám..." : "Uložit ceník"}
         </button>
       </section>
 
@@ -74,7 +96,6 @@ export default function Admin() {
           rezervace={rezervace} 
           admin={true}
           onDelete={(month, day, idx) => {
-            // Najdi index v poli rezervace
             const deleteIdx = rezervace.findIndex(r => r.den === day);
             if (deleteIdx !== -1) {
               deleteReservation(deleteIdx);
