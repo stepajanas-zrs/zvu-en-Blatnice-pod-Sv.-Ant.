@@ -1,25 +1,45 @@
 import { useState, useEffect } from "react";
 
-export default function Cenik({ admin = false }) {
+export default function Cenik({ admin = false, onSaved = null }) {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const loadCenik = async () => {
+    try {
+      const res = await fetch("/api/cenik");
+      const d = await res.json();
+      setText(d.text || "");
+    } catch (e) {
+      console.error("Chyba při načítání ceníku:", e);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    fetch("/api/cenik")
-      .then(r => r.json())
-      .then(d => {
-        setText(d.text || "");
-        setLoading(false);
-      });
+    loadCenik();
   }, []);
 
   const saveCenik = async () => {
-    await fetch("/api/cenik", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ text })
-    });
-    alert("Ceník uložen!");
+    setSaving(true);
+    try {
+      const res = await fetch("/api/cenik", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        alert("Ceník uložen!");
+        if (onSaved) {
+          onSaved();
+        }
+      } else {
+        alert("Chyba při ukládání ceníku");
+      }
+    } catch (e) {
+      alert("Chyba: " + e.message);
+    }
+    setSaving(false);
   };
 
   if (loading) return <div>Načítám...</div>;
@@ -36,8 +56,8 @@ export default function Cenik({ admin = false }) {
             onChange={e => setText(e.target.value)} 
           />
           <br />
-          <button onClick={saveCenik} style={{ marginTop: 10 }}>
-            Uložit ceník
+          <button onClick={saveCenik} disabled={saving} style={{ marginTop: 10 }}>
+            {saving ? "Ukládám..." : "Uložit ceník"}
           </button>
         </>
       ) : (

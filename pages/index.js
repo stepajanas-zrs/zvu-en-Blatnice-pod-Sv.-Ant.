@@ -6,10 +6,18 @@ import Cenik from "../components/Cenik";
 export default function Home() {
   const [rezervace, setRezervace] = useState([]);
 
+  const loadReservations = async () => {
+    try {
+      const res = await fetch("/api/rezervace");
+      const data = await res.json();
+      setRezervace(data);
+    } catch (e) {
+      console.error("Chyba při načítání rezervací:", e);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/rezervace")
-      .then(r => r.json())
-      .then(data => setRezervace(data));
+    loadReservations();
   }, []);
 
   return (
@@ -22,11 +30,7 @@ export default function Home() {
       </section>
 
       <section style={{ marginBottom: 40 }}>
-        <ReservationForm onReserved={() => {
-          fetch("/api/rezervace")
-            .then(r => r.json())
-            .then(data => setRezervace(data));
-        }} />
+        <ReservationForm onReserved={loadReservations} />
       </section>
 
       <section>

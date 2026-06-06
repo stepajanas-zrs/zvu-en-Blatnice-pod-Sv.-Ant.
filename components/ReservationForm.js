@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-export default function ReservationForm() {
+export default function ReservationForm({ onReserved = null }) {
   const [jmeno, setJmeno] = useState("");
   const [mesic, setMesic] = useState("");
   const [den, setDen] = useState("");
   const [zprava, setZprava] = useState("");
   const [ok, setOk] = useState(null);
+  const [sending, setSending] = useState(false);
 
   const mesice = [
     { num: 0, jmeno: "Leden" },
@@ -28,15 +29,23 @@ export default function ReservationForm() {
       alert("Vyber měsíc!");
       return;
     }
+    
+    setSending(true);
     const res = await fetch("/api/rezervace", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jmeno, mesic: parseInt(mesic), den: parseInt(den), zprava }),
     });
+    setSending(false);
+    
     if (res.ok) {
       setOk(true);
       setJmeno(""); setMesic(""); setDen(""); setZprava("");
       setTimeout(() => setOk(null), 3000);
+      // Volej callback pro refresh kalendáře
+      if (onReserved) {
+        onReserved();
+      }
     } else {
       setOk(false);
     }
@@ -83,7 +92,9 @@ export default function ReservationForm() {
         style={{ width: "100%", padding: 8, marginBottom: 10, boxSizing: "border-box" }}
       />
       <br/>
-      <button type="submit" style={{ padding: 8, cursor: "pointer" }}>Odeslat</button>
+      <button type="submit" disabled={sending} style={{ padding: 8, cursor: "pointer" }}>
+        {sending ? "Odesílám..." : "Odeslat"}
+      </button>
       {ok !== null && (
         <div style={{ marginTop: 10, color: ok ? "green" : "red" }}>
           {ok ? "✓ Rezervováno!" : "✗ Chyba při odeslání."}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
+import Cenik from "../components/Cenik";
 
 export default function Admin() {
   const mesice = [
@@ -8,34 +9,7 @@ export default function Admin() {
   ];
 
   // --- SPRÁVA CENÍKU ---
-  const [cenik, setCenik] = useState("");
-  const [savingC, setSavingC] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/cenik")
-      .then(r => r.json())
-      .then(d => setCenik(d.text || ""))
-      .catch(e => console.error("Chyba při načítání ceníku:", e));
-  }, []);
-
-  const ulozCenik = async () => {
-    setSavingC(true);
-    try {
-      const res = await fetch("/api/cenik", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ text: cenik })
-      });
-      if (res.ok) {
-        alert("Ceník uložen!");
-      } else {
-        alert("Chyba při ukládání ceníku");
-      }
-    } catch (e) {
-      alert("Chyba: " + e.message);
-    }
-    setSavingC(false);
-  };
+  const [cenik_refresh, setCenikRefresh] = useState(0);
 
   // --- SPRÁVA REZERVACÍ ---
   const [rezervace, setRezervace] = useState([]);
@@ -82,17 +56,7 @@ export default function Admin() {
       <h1>Administrace</h1>
       
       <section style={{ marginBottom: 40 }}>
-        <h2>Ceník</h2>
-        <textarea
-          rows={8}
-          style={{width: "100%"}}
-          value={cenik}
-          onChange={e => setCenik(e.target.value)}
-        />
-        <br />
-        <button onClick={ulozCenik} disabled={savingC}>
-          {savingC ? "Ukládám..." : "Uložit ceník"}
-        </button>
+        <Cenik admin={true} onSaved={() => setCenikRefresh(prev => prev + 1)} />
       </section>
 
       <section style={{ marginBottom: 40 }}>
