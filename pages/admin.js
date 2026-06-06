@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
 
 export default function Admin() {
+  const mesice = [
+    "Leden", "Únor", "Březen", "Duben", "Květen", "Červen",
+    "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"
+  ];
+
   // --- SPRÁVA CENÍKU ---
   const [cenik, setCenik] = useState("");
   const [savingC, setSavingC] = useState(false);
@@ -96,7 +101,7 @@ export default function Admin() {
           rezervace={rezervace} 
           admin={true}
           onDelete={(month, day, idx) => {
-            const deleteIdx = rezervace.findIndex(r => r.den === day);
+            const deleteIdx = rezervace.findIndex(r => r.mesic === month && r.den === day);
             if (deleteIdx !== -1) {
               deleteReservation(deleteIdx);
             }
@@ -113,6 +118,7 @@ export default function Admin() {
             <thead>
               <tr style={{ background: "#f0f0f0" }}>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Jméno</th>
+                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Měsíc</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Den</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Poznámka</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>Akce</th>
@@ -122,6 +128,7 @@ export default function Admin() {
               {rezervace.map((r, i) => (
                 <tr key={i}>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}><b>{r.jmeno}</b></td>
+                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{mesice[r.mesic]}</td>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.den}.</td>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.zprava}</td>
                   <td style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>

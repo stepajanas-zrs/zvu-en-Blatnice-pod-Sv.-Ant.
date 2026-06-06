@@ -17,10 +17,7 @@ export default function Calendar({ rezervace = [], admin = false, onDelete = nul
   };
 
   const getReservationsForDay = (day, month) => {
-    return rezervace.filter(r => {
-      const rDate = new Date(year, month, r.den);
-      return r.den === day;
-    });
+    return rezervace.filter(r => r.mesic === month && r.den === day);
   };
 
   return (

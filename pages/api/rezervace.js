@@ -16,15 +16,21 @@ export default function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    if (req.body && req.body.jmeno && req.body.den) {
+    if (req.body && req.body.jmeno && req.body.den !== undefined && req.body.mesic !== undefined) {
       // Převedi den na číslo
       const den = parseInt(req.body.den);
+      const mesic = parseInt(req.body.mesic);
+      
       if (isNaN(den) || den < 1 || den > 31) {
         return res.status(400).json({ error: "Den musí být číslo 1-31" });
+      }
+      if (isNaN(mesic) || mesic < 0 || mesic > 11) {
+        return res.status(400).json({ error: "Měsíc musí být 0-11" });
       }
       
       const nova_rezervace = {
         jmeno: req.body.jmeno,
+        mesic: mesic,
         den: den,
         zprava: req.body.zprava || ""
       };
@@ -32,7 +38,7 @@ export default function handler(req, res) {
       rezervace_data.push(nova_rezervace);
       return res.status(200).json({ ok: true, message: "Rezervace vytvořena" });
     }
-    return res.status(400).json({ error: "Chybí 'jmeno' nebo 'den'" });
+    return res.status(400).json({ error: "Chybí 'jmeno', 'mesic' nebo 'den'" });
   }
 
   if (req.method === 'DELETE') {
