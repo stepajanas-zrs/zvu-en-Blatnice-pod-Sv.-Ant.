@@ -34,15 +34,15 @@ export default function Admin() {
     <div style={{ maxWidth: 600, margin: "0 auto" }}>
       <h1>Administrace</h1>
       <section style={{ marginBottom: 40 }}>
-        <h2>Budeceník</h2>
+        <h2>ceník</h2>
         <textarea
           rows={8}
           style={{width: "100%"}}
-          value={budecenik}
+          value={cenik}
           onChange={e => setcenik(e.target.value)}
         />
         <br />
-        <button onClick={ulozBudecenik} disabled={savingB}>
+        <button onClick={ulozcenik} disabled={savingB}>
           {savingB ? "Ukládám..." : "Uložit ceník"}
         </button>
       </section>
