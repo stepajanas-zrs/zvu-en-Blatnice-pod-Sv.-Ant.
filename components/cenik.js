@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
-export default function Budecenik({ admin }) {
+export default function cenik({ admin }) {
   const [text, setText] = useState("");
   useEffect(() => {
-    fetch("/api/budecenik")
+    fetch("/api/cenik")
       .then((r) => r.json())
       .then((d) => setText(d.text));
   }, []);
   const save = async () => {
-    await fetch("/api/budecenik", {
+    await fetch("/api/cenik", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ text }),
@@ -18,7 +18,7 @@ export default function Budecenik({ admin }) {
 
   return (
     <div>
-      <h3>Budeceník</h3>
+      <h3>ceník</h3>
       {admin ? (
         <>
           <textarea value={text} onChange={e=>setText(e.target.value)} rows={6} cols={40}/><br/>
