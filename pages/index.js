@@ -1,16 +1,37 @@
+import { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
 import ReservationForm from "../components/ReservationForm";
-import cenik from "../components/cenik";
+import Budecenik from "../components/Budecenik";
 
 export default function Home() {
-  const rez = [];
+  const [rezervace, setRezervace] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/rezervace")
+      .then(r => r.json())
+      .then(data => setRezervace(data));
+  }, []);
+
   return (
-    <div>
+    <div style={{ maxWidth: 1400, margin: "0 auto", padding: 20 }}>
       <h1>Zvučení Blatnice pod sv. Ant.</h1>
       <p>Kalendář akcí a rezervací</p>
-      <Calendar rezervace={rez} />
-      <ReservationForm />
-      <cenik />
+      
+      <section style={{ marginBottom: 40 }}>
+        <Calendar rezervace={rezervace} />
+      </section>
+
+      <section style={{ marginBottom: 40 }}>
+        <ReservationForm onReserved={() => {
+          fetch("/api/rezervace")
+            .then(r => r.json())
+            .then(data => setRezervace(data));
+        }} />
+      </section>
+
+      <section>
+        <Budecenik admin={false} />
+      </section>
     </div>
   );
 }
