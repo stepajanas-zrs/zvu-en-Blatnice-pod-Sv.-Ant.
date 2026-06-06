@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Calendar from "../components/Calendar";
 import ReservationForm from "../components/ReservationForm";
-import Budecenik from "../components/Budecenik";
+import Cenik from "../components/Cenik";
 
 export default function Home() {
   const [rezervace, setRezervace] = useState([]);
@@ -30,7 +30,7 @@ export default function Home() {
       </section>
 
       <section>
-        <Budecenik admin={false} />
+        <Cenik admin={false} />
       </section>
     </div>
   );
