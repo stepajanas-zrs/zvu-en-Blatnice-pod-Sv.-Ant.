@@ -1,26 +1,48 @@
-import fs from "fs";
-const path = "data/rezervace.json";
+// In-memory storage
+let rezervace_data = [];
 
 export default function handler(req, res) {
-  if (req.method === "GET") {
-    const data = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : [];
-    return res.status(200).json(data);
+  // CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
-  if (req.method === "POST") {
-    const arr = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : [];
-    arr.push(req.body);
-    fs.writeFileSync(path, JSON.stringify(arr, null, 2));
-    return res.status(200).json({ok: true});
+
+  if (req.method === 'GET') {
+    return res.status(200).json(rezervace_data);
   }
-  if (req.method === "DELETE") {
-    let arr = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : [];
-    const index = req.body.index;
-    if (index >= 0 && index < arr.length) {
-      arr.splice(index, 1);
-      fs.writeFileSync(path, JSON.stringify(arr, null, 2));
-      return res.status(200).json({ok: true});
+
+  if (req.method === 'POST') {
+    if (req.body && req.body.jmeno && req.body.den) {
+      // Převedi den na číslo
+      const den = parseInt(req.body.den);
+      if (isNaN(den) || den < 1 || den > 31) {
+        return res.status(400).json({ error: "Den musí být číslo 1-31" });
+      }
+      
+      const nova_rezervace = {
+        jmeno: req.body.jmeno,
+        den: den,
+        zprava: req.body.zprava || ""
+      };
+      
+      rezervace_data.push(nova_rezervace);
+      return res.status(200).json({ ok: true, message: "Rezervace vytvořena" });
     }
-    return res.status(400).json({error: "Invalid index"});
+    return res.status(400).json({ error: "Chybí 'jmeno' nebo 'den'" });
   }
-  res.status(405).json({error: "Method not allowed"});
+
+  if (req.method === 'DELETE') {
+    const index = req.body?.index;
+    if (index !== undefined && index >= 0 && index < rezervace_data.length) {
+      rezervace_data.splice(index, 1);
+      return res.status(200).json({ ok: true, message: "Rezervace smazána" });
+    }
+    return res.status(400).json({ error: "Neplatný index" });
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
 }
