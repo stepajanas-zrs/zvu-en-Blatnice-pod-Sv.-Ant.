@@ -84,6 +84,7 @@ export default function Admin() {
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Jméno</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Měsíc</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Den</th>
+                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Místo konání</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Poznámka</th>
                 <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>Akce</th>
               </tr>
@@ -94,6 +95,7 @@ export default function Admin() {
                   <td style={{ border: "1px solid #ddd", padding: 10 }}><b>{r.jmeno}</b></td>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}>{mesice[r.mesic]}</td>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.den}.</td>
+                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.misto}</td>
                   <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.zprava}</td>
                   <td style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>
                     <button 

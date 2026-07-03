@@ -78,7 +78,7 @@ export default function Calendar({ rezervace = [], admin = false, onDelete = nul
                                       marginTop: 2,
                                       cursor: admin ? "pointer" : "default"
                                     }}
-                                    title={admin ? `Klikni pro stornování: ${res.jmeno}` : res.jmeno}
+                                    title={admin ? `Klikni pro stornování: ${res.jmeno} - ${res.misto}` : `${res.jmeno} - ${res.misto}`}
                                     onClick={() => {
                                       if (admin && onDelete) {
                                         onDelete(monthIndex, day, idx);

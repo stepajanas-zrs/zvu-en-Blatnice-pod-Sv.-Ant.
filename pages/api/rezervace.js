@@ -16,7 +16,7 @@ export default function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    if (req.body && req.body.jmeno && req.body.den !== undefined && req.body.mesic !== undefined) {
+    if (req.body && req.body.jmeno && req.body.den !== undefined && req.body.mesic !== undefined && req.body.misto) {
       // Převedi den na číslo
       const den = parseInt(req.body.den);
       const mesic = parseInt(req.body.mesic);
@@ -32,13 +32,14 @@ export default function handler(req, res) {
         jmeno: req.body.jmeno,
         mesic: mesic,
         den: den,
+        misto: req.body.misto,
         zprava: req.body.zprava || ""
       };
       
       rezervace_data.push(nova_rezervace);
       return res.status(200).json({ ok: true, message: "Rezervace vytvořena" });
     }
-    return res.status(400).json({ error: "Chybí 'jmeno', 'mesic' nebo 'den'" });
+    return res.status(400).json({ error: "Chybí 'jmeno', 'mesic', 'den' nebo 'misto'" });
   }
 
   if (req.method === 'DELETE') {

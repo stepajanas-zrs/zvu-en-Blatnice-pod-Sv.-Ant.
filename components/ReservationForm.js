@@ -4,6 +4,7 @@ export default function ReservationForm({ onReserved = null }) {
   const [jmeno, setJmeno] = useState("");
   const [mesic, setMesic] = useState("");
   const [den, setDen] = useState("");
+  const [misto, setMisto] = useState("");
   const [zprava, setZprava] = useState("");
   const [ok, setOk] = useState(null);
   const [sending, setSending] = useState(false);
@@ -34,13 +35,13 @@ export default function ReservationForm({ onReserved = null }) {
     const res = await fetch("/api/rezervace", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ jmeno, mesic: parseInt(mesic), den: parseInt(den), zprava }),
+      body: JSON.stringify({ jmeno, mesic: parseInt(mesic), den: parseInt(den), misto, zprava }),
     });
     setSending(false);
     
     if (res.ok) {
       setOk(true);
-      setJmeno(""); setMesic(""); setDen(""); setZprava("");
+      setJmeno(""); setMesic(""); setDen(""); setMisto(""); setZprava("");
       setTimeout(() => setOk(null), 3000);
       // Volej callback pro refresh kalendáře
       if (onReserved) {
@@ -81,6 +82,14 @@ export default function ReservationForm({ onReserved = null }) {
         type="number" 
         min="1" 
         max="31" 
+        required
+        style={{ width: "100%", padding: 8, marginBottom: 10, boxSizing: "border-box" }}
+      />
+      <br/>
+      <input 
+        placeholder="Místo konání" 
+        value={misto} 
+        onChange={e=>setMisto(e.target.value)} 
         required
         style={{ width: "100%", padding: 8, marginBottom: 10, boxSizing: "border-box" }}
       />
