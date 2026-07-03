@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 
-export default function Cenik({ admin = false, onSaved = null }) {
+export default function Cenik({ admin = false, onSaved = null, refreshTrigger = 0 }) {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const loadCenik = async () => {
+    setLoading(true);
     try {
       const res = await fetch("/api/cenik");
       const d = await res.json();
@@ -18,7 +19,7 @@ export default function Cenik({ admin = false, onSaved = null }) {
 
   useEffect(() => {
     loadCenik();
-  }, []);
+  }, [refreshTrigger]);
 
   const saveCenik = async () => {
     setSaving(true);
