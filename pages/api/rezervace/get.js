@@ -1,4 +1,4 @@
-import { database, ref, onValue, query, orderByChild } from "../../../lib/firebase";
+import { database, ref, onValue } from "../../../lib/firebase";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
