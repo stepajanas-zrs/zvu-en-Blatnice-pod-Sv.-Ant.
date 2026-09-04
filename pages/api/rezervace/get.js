@@ -1,37 +1,15 @@
-import { database, ref, onValue } from "../../../lib/firebase";
+import { getAllRezervace } from '@/lib/firebaseService';
 
 export default async function handler(req, res) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Metoda není povolena' });
   }
 
   try {
-    const rezervaceRef = ref(database, "rezervace");
-
-    // Načtení dat z Firebase
-    return new Promise((resolve) => {
-      onValue(
-        rezervaceRef,
-        (snapshot) => {
-          const data = snapshot.val();
-          const rezervace = data ? Object.values(data) : [];
-
-          resolve(
-            res.status(200).json({
-              ok: true,
-              count: rezervace.length,
-              data: rezervace,
-            })
-          );
-        },
-        (error) => {
-          console.error("Chyba při čtení rezervací:", error);
-          resolve(res.status(500).json({ error: error.message }));
-        }
-      );
-    });
+    const rezervace = await getAllRezervace();
+    return res.status(200).json({ success: true, data: rezervace });
   } catch (error) {
-    console.error("Chyba:", error);
-    return res.status(500).json({ error: error.message });
+    console.error('Chyba:', error);
+    return res.status(500).json({ error: 'Chyba při načítání rezervací' });
   }
 }
