@@ -1,0 +1,64 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+  font-size: 3em;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo p {
+  font-size: 1.3em;
+  margin: 10px 0 0 0;
+  opacity: 0.95;
+}
+
+main {
+  flex: 1;
+  background: #fafafa;
+  padding: 40px 20px;
+}
+
+.footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 40px;
+}
+
+.footer p {
+  margin: 10px 0;
+}
+
+.footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #764ba2;
+}
+
+@media (max-width: 768px) {
+  .logo h1 {
+    font-size: 2em;
+  }
+  
+  .logo p {
+    font-size: 1em;
+  }
+}
