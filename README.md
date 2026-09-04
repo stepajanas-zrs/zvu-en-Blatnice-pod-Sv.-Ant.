@@ -1,86 +1,73 @@
-# Blatnická Rezervace
+# Blatnická Rezervace 🎭
 
-Webová aplikace pro správu rezervací a ceníku pomocí Firebase Realtime Database.
+## 🚀 Funkčnosti
 
-## 🚀 Instalace a spuštění
+- ✅ Rezervační formulář s validací
+- ✅ Interaktivní kalendář (volno vs. obsazeno)
+- ✅ Typy akcí (Svatba, Cinibál, Koncert, Mluvené slovo)
+- ✅ Email notifikace (vlastník + klient)
+- ✅ Admin panel s přehledem a editací
+- ✅ Responsive design
 
-### 1. Klonuj projekt
+## 📋 Setup
+
+### 1. Firebase
+
 ```bash
-git clone https://github.com/stepajanas-zrs/zvu-en-Blatnice-pod-Sv.-Ant.
-cd zvu-en-Blatnice-pod-Sv.-Ant.
+# Vytvoř Firebase projekt na https://firebase.google.com
+# Zkopíruj konfiguraci do .env.local
+cp .env.local.example .env.local
 ```
 
-### 2. Nainstaluj závislosti
+### 2. Email (Gmail)
+
+```bash
+# Vytvoř aplikační heslo na:
+# https://myaccount.google.com/apppasswords
+
+# Vlož do .env.local:
+EMAIL_USER=tvoj_email@gmail.com
+EMAIL_PASSWORD=tvoje_app_heslo
+```
+
+### 3. Admin přihlášení
+
+```bash
+# Výchozí údaje:
+Email: admin@blatnice.cz
+Heslo: admin123
+
+# Změň v .env.local
+```
+
+### 4. Instalace
+
 ```bash
 npm install
-npm install firebase
-```
-
-### 3. Vytvoř `.env.local`
-Vytvoř soubor `.env.local` v kořeni projektu a vlož Firebase konfiguraci:
-
-```
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyOmhziltRaeZguyovprZ2Fq37MajMQ2aJQ
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=blatnice-rezervace.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://blatnice-rezervace-default-rtdb.europe-west1.firebasedatabase.app
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=blatnice-rezervace
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=blatnice-rezervace.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=223258741477
-NEXT_PUBLIC_FIREBASE_APP_ID=1:223258741477:web:94988b030d03fc6501e20c
-```
-
-### 4. Spusť projekt
-```bash
 npm run dev
 ```
 
-Projekt bude dostupný na: **http://localhost:3000**
+## 📍 Stránky
 
-## 📋 Funkce
+- **Formulář:** `/rezervace-form`
+- **Admin přihlášení:** `/admin/login`
+- **Admin panel:** `/admin/dashboard`
 
-### Rezervace
-- **Stránka**: `/rezervace-form`
-- **API**: `/api/rezervace/add` (POST - přidání)
-- **API**: `/api/rezervace/get` (GET - čtení)
-- Uložení: Firebase Realtime Database
+## 🔐 Bezpečnost
 
-### Ceník
-- **API**: `/api/cenik/add` (POST - přidání)
-- **API**: `/api/cenik/get` (GET - čtení)
-- Uložení: Firebase Realtime Database
+⚠️ **V produkci MĚNIT!**
 
-## 📊 Firebase Struktura
+- Používat NextAuth.js pro autentizaci
+- Zašifrovat hesla
+- Používat environment variables
 
-```
-blatnice-rezervace
-├── rezervace/
-│   ├── -ID1: { jmeno, email, telefon, datum, ... }
-│   └── -ID2: { jmeno, email, telefon, datum, ... }
-└── cenik/
-    ├── -ID1: { nazev, cena, popis, kategorie }
-    └── -ID2: { nazev, cena, popis, kategorie }
-```
+## 📧 Email
 
-## 🔧 Technologie
+Email notifikace se odesílají automaticky:
 
-- **Next.js** - React framework
-- **Firebase Realtime Database** - Cloud databáze
-- **Vercel** - Hosting
-
-## 📝 Poznámky
-
-- Všechna data se ukládají do Firebase
-- Web funguje online bez lokálního terminálu
-- Data se automaticky synchronizují
-
-## ✅ Co je hotovo
-
-- ✅ Firebase integraci
-- ✅ API pro rezervace
-- ✅ API pro ceník
-- ✅ Formulář pro rezervace
-- ✅ Dokumentace
+- ✅ **Klientovi:** Potvrzení rezervace
+- ✅ **Adminovi:** Nová rezervace (s detaily)
 
 ---
 
-**Vytvořeno**: 2026-07-29
+**Vytvořeno pro ZVU Blatnické rezervace 🎭**
