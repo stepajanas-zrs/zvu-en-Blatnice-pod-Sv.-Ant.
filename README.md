@@ -1,73 +1,32 @@
-# Blatnická Rezervace 🎭
+# 🎵 Zvučení Blatnické - Rezervační Systém
 
-## 🚀 Funkčnosti
+Moderní rezervační systém pro tradiční akci Zvučení Blatnické pod Sv. Antonínkem.
 
-- ✅ Rezervační formulář s validací
-- ✅ Interaktivní kalendář (volno vs. obsazeno)
-- ✅ Typy akcí (Svatba, Cinibál, Koncert, Mluvené slovo)
-- ✅ Email notifikace (vlastník + klient)
-- ✅ Admin panel s přehledem a editací
-- ✅ Responsive design
+## 🚀 Funkce
 
-## 📋 Setup
+✅ Rezervační formulář  
+✅ Admin panel - správa rezervací  
+✅ Email notifikace - automatické emaily  
+✅ Firebase Firestore - bezpečná databáze  
+✅ Responsivní design  
 
-### 1. Firebase
-
-```bash
-# Vytvoř Firebase projekt na https://firebase.google.com
-# Zkopíruj konfiguraci do .env.local
-cp .env.local.example .env.local
-```
-
-### 2. Email (Gmail)
-
-```bash
-# Vytvoř aplikační heslo na:
-# https://myaccount.google.com/apppasswords
-
-# Vlož do .env.local:
-EMAIL_USER=tvoj_email@gmail.com
-EMAIL_PASSWORD=tvoje_app_heslo
-```
-
-### 3. Admin přihlášení
-
-```bash
-# Výchozí údaje:
-Email: admin@blatnice.cz
-Heslo: admin123
-
-# Změň v .env.local
-```
-
-### 4. Instalace
+## 📋 Instalace
 
 ```bash
 npm install
 npm run dev
 ```
 
-## 📍 Stránky
+Otevři: http://localhost:3000
 
-- **Formulář:** `/rezervace-form`
-- **Admin přihlášení:** `/admin/login`
-- **Admin panel:** `/admin/dashboard`
+## ⚙️ Konfigurace
 
-## 🔐 Bezpečnost
+Vytvoř `.env.local` s tvými Firebase a email údaji.
 
-⚠️ **V produkci MĚNIT!**
+## 👨‍💼 Admin Panel
 
-- Používat NextAuth.js pro autentizaci
-- Zašifrovat hesla
-- Používat environment variables
-
-## 📧 Email
-
-Email notifikace se odesílají automaticky:
-
-- ✅ **Klientovi:** Potvrzení rezervace
-- ✅ **Adminovi:** Nová rezervace (s detaily)
+Přístup: http://localhost:3000/admin
 
 ---
 
-**Vytvořeno pro ZVU Blatnické rezervace 🎭**
+**© 2024 ZVU Blatnická pod Sv. Antonínkem**

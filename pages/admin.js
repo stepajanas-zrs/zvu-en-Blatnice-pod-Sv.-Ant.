@@ -1,116 +1,169 @@
-import { useState, useEffect } from "react";
-import Calendar from "../components/Calendar";
-import Cenik from "../components/Cenik";
+import { useEffect, useState } from 'react';
+import styles from '../styles/Admin.module.css';
 
 export default function Admin() {
-  const mesice = [
-    "Leden", "Únor", "Březen", "Duben", "Květen", "Červen",
-    "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"
-  ];
-
-  // --- SPRÁVA CENÍKU ---
-  const [cenik_refresh, setCenikRefresh] = useState(0);
-
-  // --- SPRÁVA REZERVACÍ ---
   const [rezervace, setRezervace] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const loadReservations = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/rezervace");
-      const data = await res.json();
-      setRezervace(data);
-    } catch (e) {
-      console.error("Chyba při načítání rezervací:", e);
-    }
-    setLoading(false);
-  };
+  const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
-    loadReservations();
+    const stored = localStorage.getItem('adminAuth');
+    if (stored) {
+      setAuthenticated(true);
+      loadRezervace();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  const deleteReservation = async (index) => {
-    if (confirm("Opravdu chceš zrušit tuto rezervaci?")) {
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      localStorage.setItem('adminAuth', 'true');
+      setAuthenticated(true);
+      loadRezervace();
+    } else {
+      alert('Chybné heslo!');
+    }
+  };
+
+  const loadRezervace = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/rezervace/list');
+      const data = await response.json();
+      setRezervace(data);
+    } catch (error) {
+      console.error('Chyba:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await fetch('/api/rezervace/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      alert('Status aktualizován!');
+      loadRezervace();
+    } catch (error) {
+      console.error('Chyba:', error);
+    }
+  };
+
+  const deleteRezervace = async (id) => {
+    if (confirm('Smazat tuto rezervaci?')) {
       try {
-        const res = await fetch("/api/rezervace", {
-          method: "DELETE",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ index })
-        });
-        if (res.ok) {
-          alert("Rezervace zrušena!");
-          loadReservations();
-        } else {
-          alert("Chyba při rušení rezervace");
-        }
-      } catch (e) {
-        alert("Chyba: " + e.message);
+        await fetch(`/api/rezervace/delete?id=${id}`, { method: 'DELETE' });
+        alert('Rezervace smazána!');
+        loadRezervace();
+      } catch (error) {
+        console.error('Chyba:', error);
       }
     }
   };
 
+  if (!authenticated) {
+    return (
+      <div className={styles.loginContainer}>
+        <h1>Administrace</h1>
+        <form onSubmit={handleLogin} className={styles.loginForm}>
+          <input
+            type="password"
+            placeholder="Zadejte heslo"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Přihlásit se</button>
+        </form>
+      </div>
+    );
+  }
+
+  const filteredRezervace = filter === 'all' 
+    ? rezervace 
+    : rezervace.filter(r => r.status === filter);
+
   return (
-    <div style={{ maxWidth: 1400, margin: "0 auto", padding: 20 }}>
-      <h1>Administrace</h1>
+    <div className={styles.container}>
+      <h1>Administrace rezervací</h1>
       
-      <section style={{ marginBottom: 40 }}>
-        <Cenik admin={true} onSaved={() => setCenikRefresh(prev => prev + 1)} />
-      </section>
+      <div className={styles.filters}>
+        <button 
+          onClick={() => setFilter('all')} 
+          className={filter === 'all' ? styles.active : ''}
+        >
+          Všechny ({rezervace.length})
+        </button>
+        <button 
+          onClick={() => setFilter('pending')} 
+          className={filter === 'pending' ? styles.active : ''}
+        >
+          Čekající ({rezervace.filter(r => r.status === 'pending').length})
+        </button>
+        <button 
+          onClick={() => setFilter('approved')} 
+          className={filter === 'approved' ? styles.active : ''}
+        >
+          Schválené ({rezervace.filter(r => r.status === 'approved').length})
+        </button>
+        <button 
+          onClick={() => setFilter('rejected')} 
+          className={filter === 'rejected' ? styles.active : ''}
+        >
+          Zamítnuté ({rezervace.filter(r => r.status === 'rejected').length})
+        </button>
+      </div>
 
-      <section style={{ marginBottom: 40 }}>
-        <h2>Kalendář s rezervacemi</h2>
-        <Calendar 
-          rezervace={rezervace} 
-          admin={true}
-          onDelete={(month, day, idx) => {
-            const deleteIdx = rezervace.findIndex(r => r.mesic === month && r.den === day);
-            if (deleteIdx !== -1) {
-              deleteReservation(deleteIdx);
-            }
-          }}
-        />
-      </section>
-
-      <section>
-        <h2>Všechny rezervace</h2>
-        {loading && <em>Načítám...</em>}
-        {!loading && rezervace.length === 0 && <em>Žádné rezervace</em>}
-        {!loading && rezervace.length > 0 && (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#f0f0f0" }}>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Jméno</th>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Měsíc</th>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Den</th>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Místo konání</th>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "left" }}>Poznámka</th>
-                <th style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>Akce</th>
+      {loading ? (
+        <p>Načítám...</p>
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Jméno</th>
+              <th>Email</th>
+              <th>Datum</th>
+              <th>Čas</th>
+              <th>Osob</th>
+              <th>Status</th>
+              <th>Akce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRezervace.map(rez => (
+              <tr key={rez.id}>
+                <td>{rez.jmeno}</td>
+                <td>{rez.email}</td>
+                <td>{rez.datum}</td>
+                <td>{rez.cas}:00</td>
+                <td>{rez.pocet_osob}</td>
+                <td>
+                  <select 
+                    value={rez.status}
+                    onChange={(e) => updateStatus(rez.id, e.target.value)}
+                  >
+                    <option value="pending">Čekající</option>
+                    <option value="approved">Schválená</option>
+                    <option value="rejected">Zamítnutá</option>
+                  </select>
+                </td>
+                <td>
+                  <button onClick={() => deleteRezervace(rez.id)} className={styles.delete}>
+                    Smazat
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {rezervace.map((r, i) => (
-                <tr key={i}>
-                  <td style={{ border: "1px solid #ddd", padding: 10 }}><b>{r.jmeno}</b></td>
-                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{mesice[r.mesic]}</td>
-                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.den}.</td>
-                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.misto}</td>
-                  <td style={{ border: "1px solid #ddd", padding: 10 }}>{r.zprava}</td>
-                  <td style={{ border: "1px solid #ddd", padding: 10, textAlign: "center" }}>
-                    <button 
-                      onClick={() => deleteReservation(i)}
-                      style={{ background: "#ff6666", color: "white", padding: "5px 10px", border: "none", cursor: "pointer" }}
-                    >
-                      Zrušit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
