@@ -1,7 +1,7 @@
 {
   "name": "blatnice-rezervace",
   "version": "1.0.0",
-  "description": "Rezervační systém pro Zvučení Blatnice",
+  "description": "Rezervační systém pro Zvučení Blatnické",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
