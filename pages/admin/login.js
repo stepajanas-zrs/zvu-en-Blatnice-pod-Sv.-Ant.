@@ -13,8 +13,7 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    // Jednoduchá validace - v produkci by se měla použít správná autentizace
-    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@blatnice.cz';
+    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'zvuceni.blatnicepodsvant@gmail.com';
     const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
@@ -63,7 +62,7 @@ export default function AdminLogin() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@blatnice.cz"
+              placeholder="zvuceni.blatnicepodsvant@gmail.com"
               required
               style={{
                 width: '100%',
