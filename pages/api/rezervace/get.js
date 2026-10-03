@@ -1,4 +1,4 @@
-import { getAllRezervace } from '@/lib/firebaseService';
+import { getAllRezervace } from '../../../lib/firebaseService';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const rezervace = await getAllRezervace();
     return res.status(200).json({ success: true, data: rezervace });
   } catch (error) {
-    console.error('Chyba:', error);
+    console.error('Chyba při načítání rezervací:', error);
     return res.status(500).json({ error: 'Chyba při načítání rezervací' });
   }
 }

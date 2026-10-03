@@ -1,4 +1,4 @@
-import RezervaceForm from '../components/RezervaceForm';
+import RezervaceForm from './rezervace-form';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <p>&copy; 2024 ZVU Blatnická pod Sv. Antonínkem. Všechna práva vyhrazena.</p>
-        <p><a href="/admin">Admin panel</a></p>
+        <p><a href="/admin/login">Admin panel</a></p>
       </footer>
     </div>
   );

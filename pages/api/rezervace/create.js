@@ -1,70 +1,170 @@
-import nodemailer from 'nodemailer';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../lib/firebase';
+import { useEffect, useState } from 'react';
+import styles from '../styles/Admin.module.css';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT),
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+export default function Admin() {
+  const [rezervace, setRezervace] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Metoda není povolena' });
-  }
-
-  try {
-    const { jmeno, email, telefon, datum, cas, akce, pocet_osob, mista, zasuvka, elektrina, poznamka } = req.body;
-
-    if (!jmeno || !email || !datum || !cas) {
-      return res.status(400).json({ error: 'Chybějící povinná pole' });
+  useEffect(() => {
+    const stored = localStorage.getItem('adminAuth');
+    if (stored) {
+      setAuthenticated(true);
+      loadRezervace();
+    } else {
+      setLoading(false);
     }
+  }, []);
 
-    // Email klientovi
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to: email,
-      subject: `Potvrzení rezervace - Zvučení Blatnické`,
-      html: `
-        <h2>Děkujeme za vaši rezervaci!</h2>
-        <p>Vaše rezervace byla přijata a čeká na schválení administrátora.</p>
-        <hr>
-        <p><strong>Detaily rezervace:</strong></p>
-        <ul>
-          <li>Jméno: ${jmeno}</li>
-          <li>Datum: ${datum}</li>
-          <li>Čas: ${cas}:00</li>
-          <li>Počet osob: ${pocet_osob}</li>
-          <li>Akce: ${akce || 'Neurčeno'}</li>
-          <li>Zásuvka: ${zasuvka ? 'Ano' : 'Ne'}</li>
-          <li>Elektřina: ${elektrina ? 'Ano' : 'Ne'}</li>
-        </ul>
-        <p>Brzy se vám ozveme s potvrzením!</p>
-      `,
-    });
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      localStorage.setItem('adminAuth', 'true');
+      setAuthenticated(true);
+      loadRezervace();
+    } else {
+      alert('Chybné heslo!');
+    }
+  };
 
-    // Email adminovi
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to: process.env.ADMIN_EMAIL,
-      subject: `🔔 Nová rezervace od ${jmeno}`,
-      html: `
-        <h2>Nová rezervace!</h2>
-        <p><strong>Od:</strong> ${jmeno} (${email}, ${telefon})</p>
-        <p><strong>Datum:</strong> ${datum} v ${cas}:00</p>
-        <p><strong>Počet osob:</strong> ${pocet_osob}</p>
-        <p><strong>Akce:</strong> ${akce || 'Neurčeno'}</p>
-        <p><strong>Poznámka:</strong> ${poznamka || '-'}</p>
-      `,
-    });
+  const loadRezervace = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/rezervace/list');
+      const data = await response.json();
+      const items = Array.isArray(data) ? data : data?.data || [];
+      setRezervace(items);
+    } catch (error) {
+      console.error('Chyba:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    res.status(201).json({ success: true, message: 'Rezervace přijata' });
-  } catch (error) {
-    console.error('Chyba:', error);
-    res.status(500).json({ error: 'Chyba při ukládání rezervace' });
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await fetch('/api/rezervace/update', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      alert('Status aktualizován!');
+      loadRezervace();
+    } catch (error) {
+      console.error('Chyba:', error);
+    }
+  };
+
+  const deleteRezervace = async (id) => {
+    if (confirm('Smazat tuto rezervaci?')) {
+      try {
+        await fetch(`/api/rezervace/delete?id=${id}`, { method: 'DELETE' });
+        alert('Rezervace smazána!');
+        loadRezervace();
+      } catch (error) {
+        console.error('Chyba:', error);
+      }
+    }
+  };
+
+  if (!authenticated) {
+    return (
+      <div className={styles.loginContainer}>
+        <h1>Administrace</h1>
+        <form onSubmit={handleLogin} className={styles.loginForm}>
+          <input
+            type="password"
+            placeholder="Zadejte heslo"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Přihlásit se</button>
+        </form>
+      </div>
+    );
   }
+
+  const filteredRezervace = filter === 'all'
+    ? rezervace
+    : rezervace.filter(r => r.status === filter);
+
+  return (
+    <div className={styles.container}>
+      <h1>Administrace rezervací</h1>
+
+      <div className={styles.filters}>
+        <button
+          onClick={() => setFilter('all')}
+          className={filter === 'all' ? styles.active : ''}
+        >
+          Všechny ({rezervace.length})
+        </button>
+        <button
+          onClick={() => setFilter('pending')}
+          className={filter === 'pending' ? styles.active : ''}
+        >
+          Čekající ({rezervace.filter(r => r.status === 'pending').length})
+        </button>
+        <button
+          onClick={() => setFilter('approved')}
+          className={filter === 'approved' ? styles.active : ''}
+        >
+          Schválené ({rezervace.filter(r => r.status === 'approved').length})
+        </button>
+        <button
+          onClick={() => setFilter('rejected')}
+          className={filter === 'rejected' ? styles.active : ''}
+        >
+          Zamítnuté ({rezervace.filter(r => r.status === 'rejected').length})
+        </button>
+      </div>
+
+      {loading ? (
+        <p>Načítám...</p>
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Jméno</th>
+              <th>Email</th>
+              <th>Datum</th>
+              <th>Čas</th>
+              <th>Osob</th>
+              <th>Status</th>
+              <th>Akce</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRezervace.map(rez => (
+              <tr key={rez.id}>
+                <td>{rez.jmeno}</td>
+                <td>{rez.email}</td>
+                <td>{rez.datum}</td>
+                <td>{rez.cas}:00</td>
+                <td>{rez.pocet_osob}</td>
+                <td>
+                  <select
+                    value={rez.status || 'pending'}
+                    onChange={(e) => updateStatus(rez.id, e.target.value)}
+                  >
+                    <option value="pending">Čekající</option>
+                    <option value="approved">Schválená</option>
+                    <option value="rejected">Zamítnutá</option>
+                  </select>
+                </td>
+                <td>
+                  <button onClick={() => deleteRezervace(rez.id)} className={styles.delete}>
+                    Smazat
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
 }
