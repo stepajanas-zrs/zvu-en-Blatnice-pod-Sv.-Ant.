@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Calendar from '../../components/Calendar';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -164,18 +165,24 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', overflow: 'hidden', marginBottom: '30px' }}>
-          <h2 style={{ padding: '20px', borderBottom: '1px solid #eee', margin: 0 }}>💰 Ceník</h2>
-          <div style={{ padding: '20px' }}>
-            <textarea
-              value={cenikText}
-              onChange={(e) => setCenikText(e.target.value)}
-              rows={12}
-              style={{ width: '100%', border: '1px solid #ddd', borderRadius: '6px', padding: '12px', fontSize: '14px', boxSizing: 'border-box' }}
-            />
-            <button onClick={saveCenik} disabled={cenikLoading} style={{ marginTop: '16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '6px', padding: '10px 18px', cursor: 'pointer', fontWeight: 'bold' }}>
-              {cenikLoading ? 'Ukládám...' : 'Uložit ceník'}
-            </button>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
+          <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+            <h2 style={{ padding: '20px', borderBottom: '1px solid #eee', margin: 0 }}>💰 Ceník</h2>
+            <div style={{ padding: '20px' }}>
+              <textarea
+                value={cenikText}
+                onChange={(e) => setCenikText(e.target.value)}
+                rows={12}
+                style={{ width: '100%', border: '1px solid #ddd', borderRadius: '6px', padding: '12px', fontSize: '14px', boxSizing: 'border-box' }}
+              />
+              <button onClick={saveCenik} disabled={cenikLoading} style={{ marginTop: '16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '6px', padding: '10px 18px', cursor: 'pointer', fontWeight: 'bold' }}>
+                {cenikLoading ? 'Ukládám...' : 'Uložit ceník'}
+              </button>
+            </div>
+          </div>
+
+          <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', overflow: 'hidden', padding: '20px' }}>
+            <Calendar rezervace={rezervace} admin={true} onDelete={handleDelete} />
           </div>
         </div>
 
