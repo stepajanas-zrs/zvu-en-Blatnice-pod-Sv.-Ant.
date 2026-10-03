@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 export default function AdminLogin() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,14 +13,14 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'zvuceni.blatnicepodsvant@gmail.com';
+    const ADMIN_USERNAME = process.env.NEXT_PUBLIC_ADMIN_USERNAME || 'admin';
     const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
       localStorage.setItem('adminToken', 'authenticated');
       router.push('/admin/dashboard');
     } else {
-      setError('Nesprávný email nebo heslo');
+      setError('Nesprávné uživatelské jméno nebo heslo');
     }
     setLoading(false);
   };
@@ -57,12 +57,12 @@ export default function AdminLogin() {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Email:</label>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Uživatelské jméno:</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="zvuceni.blatnicepodsvant@gmail.com"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="admin"
               required
               style={{
                 width: '100%',
