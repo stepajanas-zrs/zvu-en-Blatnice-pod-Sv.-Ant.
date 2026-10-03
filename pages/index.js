@@ -11,7 +11,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main>
+      <main className={styles.main}>
         <RezervaceForm />
       </main>
 
