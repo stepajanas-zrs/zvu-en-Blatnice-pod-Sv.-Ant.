@@ -1,6 +1,5 @@
-import { db } from '../../../lib/firebase'; // Případně db, podle toho, co reálně exportuješ z lib/firebase.js
-import { ref, onValue } from 'firebase/database';
-
+import { db } from '../../../lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
