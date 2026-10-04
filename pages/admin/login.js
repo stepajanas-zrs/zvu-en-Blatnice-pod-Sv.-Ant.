@@ -14,8 +14,8 @@ export default function AdminLogin() {
     setError('');
 
     // Jednoduchá validace - v produkci by se měla použít správná autentizace
-    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin';
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'spravce';
+    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'jitus684';
 
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       localStorage.setItem('adminToken', 'authenticated');
