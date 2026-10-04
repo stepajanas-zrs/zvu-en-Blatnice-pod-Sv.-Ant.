@@ -1,5 +1,5 @@
-router.push('/admin/login');
-/*import { useEffect, useState } from 'react';
+//router.push('/admin/login');
+import { useEffect, useState } from 'react';
 import styles from '../styles/Admin.module.css';
 
 export default function Admin() {
@@ -167,4 +167,4 @@ export default function Admin() {
       )}
     </div>
   );
-}*/
+}
