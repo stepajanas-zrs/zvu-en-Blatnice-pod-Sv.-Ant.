@@ -1,4 +1,9 @@
-import { database, ref, push } from "../../../lib/firebase";
+// ŠPATNĚ (odstraň):
+// import { database, ref, push } from '../../../lib/firebase';
+
+// SPRÁVNĚ (nahraď tímto):
+import { database } from '../../../lib/firebase'; // Tvá inicializovaná databáze
+import { ref, push } from 'firebase/database';    // Funkce přímo z Firebase balíčku
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
