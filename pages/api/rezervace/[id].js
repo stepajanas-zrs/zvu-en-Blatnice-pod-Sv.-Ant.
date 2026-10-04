@@ -1,4 +1,6 @@
-import { deleteRezervace, updateRezervace } from '@/lib/firebaseService';
+// Místo '@/lib/firebaseService' použijeme přímou relativní cestu:
+import { ... } from '../../../lib/firebaseService'; 
+
 
 export default async function handler(req, res) {
   const { id } = req.query;
