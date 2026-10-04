@@ -1,6 +1,9 @@
+// ODSTRAŇ TYTO ŘÁDKY:
 // Místo '@/lib/firebaseService' použijeme přímou relativní cestu:
-import { ... } from '../../../lib/firebaseService'; 
+// import { ... } from '../../../lib/firebaseService'; 
 
+// A NAHRAĎ JE TÍMTO (dosaď to, co z toho souboru reálně potřebuješ, nejčastěji db):
+import { db } from '../../../lib/firebaseService';
 
 export default async function handler(req, res) {
   const { id } = req.query;
