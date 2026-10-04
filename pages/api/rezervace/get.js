@@ -1,4 +1,5 @@
-import { getAllRezervace } from '@/lib/firebaseService';
+// Místo '@/lib/firebaseService' použijeme přímou relativní cestu:
+import { ... } from '../../../lib/firebaseService'; 
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
