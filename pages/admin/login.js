@@ -63,7 +63,7 @@ export default function AdminLogin() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@blatnice.cz"
+              placeholder="admin"
               required
               style={{
                 width: '100%',
