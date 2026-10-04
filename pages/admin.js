@@ -1,4 +1,4 @@
-router.push('/admin/dashboard');
+router.push('/admin/login');
 /*import { useEffect, useState } from 'react';
 import styles from '../styles/Admin.module.css';
 
