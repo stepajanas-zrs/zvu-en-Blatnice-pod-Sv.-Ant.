@@ -1,4 +1,6 @@
-import { database, ref, push } from "../../../lib/firebase";
+import { database } from '../../../lib/firebase'; // Pokud tvůj soubor exportuje databázi pod jiným názvem (např. db), změň slovo database na db
+import { ref, push } from 'firebase/database';
+
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
