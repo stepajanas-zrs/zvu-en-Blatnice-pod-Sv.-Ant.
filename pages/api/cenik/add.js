@@ -1,4 +1,4 @@
-import { database } from '../../../lib/firebase'; // Pokud tvůj soubor exportuje databázi pod jiným názvem (např. db), změň slovo database na db
+import { db } from '../../../lib/firebase'; // Pokud tvůj soubor exportuje databázi pod jiným názvem (např. db), změň slovo database na db
 import { ref, push } from 'firebase/database';
 
 
