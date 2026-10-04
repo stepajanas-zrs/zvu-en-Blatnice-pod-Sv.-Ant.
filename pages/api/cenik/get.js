@@ -1,4 +1,4 @@
-import { database } from '../../../lib/firebase'; // Případně db, podle toho, co reálně exportuješ z lib/firebase.js
+import { db } from '../../../lib/firebase'; // Případně db, podle toho, co reálně exportuješ z lib/firebase.js
 import { ref, onValue } from 'firebase/database';
 
 
