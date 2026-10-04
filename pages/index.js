@@ -16,7 +16,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <p>&copy; 2024 ZVU Blatnická pod Sv. Antonínkem. Všechna práva vyhrazena.</p>
+        <p>&copy; 2026 ZVU Blatnická pod Sv. Antonínkem. Všechna práva vyhrazena.</p>
         <p><a href="/admin/login/">Admin panel</a></p>
       </footer>
     </div>
