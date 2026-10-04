@@ -65,7 +65,7 @@
   min-height: 100px;
 }
 
-button {
+.button {
   padding: 15px;
   background: #ff6b6b;
   color: white;
@@ -77,11 +77,11 @@ button {
   transition: background 0.3s;
 }
 
-button:hover:not(:disabled) {
+.button:hover:not(:disabled) {
   background: #ff5252;
 }
 
-button:disabled {
+.button:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
