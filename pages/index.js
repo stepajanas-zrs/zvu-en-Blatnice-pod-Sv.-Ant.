@@ -6,7 +6,7 @@ export default function Home() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <h1>🎵 Ozvučení Blatnicke 🎵</h1>
+          <h1>🎵 Ozvučení Blatnice 🎵</h1>
           <p>Rezervační systém pro místní tradici</p>
         </div>
       </header>
