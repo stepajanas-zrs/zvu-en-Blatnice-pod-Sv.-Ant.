@@ -14,9 +14,12 @@ export default function AdminLogin() {
     setError('');
 
     // Jednoduchá validace - v produkci by se měla použít správná autentizace
-    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin';
+    /*const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin';
     const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
-
+    */
+    const ADMIN_EMAIL =  'admin';
+    const ADMIN_PASSWORD = 'admin123';
+    
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       localStorage.setItem('adminToken', 'authenticated');
       router.push('/admin/dashboard');
@@ -63,7 +66,7 @@ export default function AdminLogin() {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin"
+              placeholder="user"
               required
               style={{
                 width: '100%',
